@@ -1,0 +1,30 @@
+doctype html
+html
+  head
+    // Basics
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
+    title Login
+    // CSS
+    link(rel='stylesheet', href='css/login-reset.css')
+    link(rel='stylesheet', href='css/login-animate.css')
+    link(rel='stylesheet', href='css/login-styles.css')
+  // Main HTML
+  body
+    // Begin Page Content
+    #container
+      form(method='post', action='/login')
+        label(for='name') Username:
+        input#usernameInput(type='name', name='username')
+        label(for='password') Password:
+        // <p><a href="#">Forgot your password?</a>
+        input(type='password', name='password')
+        #lower
+          input(type='checkbox')
+          label.check(for='checkbox') Keep me logged in
+          input(type='submit', value='Login', onclick='saveUsername()')
+  script(type='text/javascript').
+    function saveUsername() {
+    username = document.getElementById("usernameInput").value;
+    localStorage.username = username;
+    }
