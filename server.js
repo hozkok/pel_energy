@@ -59,6 +59,7 @@ app.post('/login', function(req, res) {
         );   
     });
 
+});
 
     // signup...
     // User.findOne({'username': req.body.username}, function(err, user) {
@@ -76,12 +77,7 @@ app.post('/login', function(req, res) {
     //         });
     //     }
     // });
-});
 
-
-app.get('/hello.txt', function(req, res){
-    res.send('Hello World!');
-});
 
 app.get('/', function(req, res) {
     var price_data = {name: 'csv/price.csv'},
