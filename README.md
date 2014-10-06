@@ -2,7 +2,7 @@ The server runs with the command "node server.js" (NOTE: nodejs must be installe
 
 template files are built with jade. (http://jade-lang.com) All templates are stored in "views" directory.
 
-static files (eg. css, javascript files that will be run in client side) are stored in "static" directory.
+static files (eg. css, javascript files that will be run on client side) are stored in "static" directory.
 
 MongoDB database models are stored in "models" directory.
 
