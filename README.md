@@ -9,11 +9,13 @@ MongoDB database models are stored in "models" directory.
 database configuration settings (eg. which db server to connect) are stored in "db" directory.
 
 
-NOTE: to install any missing node module; 
+# NOTE: to install any missing node module; 
+
     ``` npm install <module-name> --save ```
 
-test users and passwords:
+# test users and passwords:
     ```
     1. username: "asd", password: "asdasd"
+
     2. username: "qwe", password: "asdqwe"
     ```
