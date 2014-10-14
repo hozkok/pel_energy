@@ -40,23 +40,36 @@ app.post('/login', function(req, res) {
     }
     // login...
     User.findOne({'username': req.body.username}, function(err, user) {
-        if (err) res.send(err.message);
-        if (!user) res.send('user not found.');
+        if (err) return res.send(err.message);
+        if (!user) return res.send('user not found.');
         if (!user.isValidPassword(req.body.password)) 
-            res.send('wrong password!');
+            return res.send('wrong password!');
 
+        // var price_data = {name: 'csv/price.csv'};
+        // var demand_data = {name: 'csv/' + req.body.username + '.csv'};
+        // data_handler.parallel_read([price_data, demand_data],
+        //     function() {
+        //         res.render('user_charts', {
+        //             price: price_data.data,
+        //             p_total: price_data.total,
+        //             demand: demand_data.data,
+        //             d_total: demand_data.total
+        //         });
+        //     }
+        console.log('user data: ', user.data);
         var price_data = {name: 'csv/price.csv'};
-        var demand_data = {name: 'csv/' + req.body.username + '.csv'};
-        data_handler.parallel_read([price_data, demand_data],
-            function() {
-                res.render('user_charts', {
-                    price: price_data.data,
-                    p_total: price_data.total,
-                    demand: demand_data.data,
-                    d_total: demand_data.total
-                });
-            }
-        );   
+        data_handler.parallel_read([price_data], function() {
+            res.render('user_charts', {
+                price: price_data.data,
+                p_total: price_data.total,
+                demand: user.data,
+                d_total: user.data.reduce(
+                    function(sum, num) {
+                        return sum + num;
+                    }
+                )
+            });
+        });
     });
 
 });
@@ -92,13 +105,26 @@ app.get('/', function(req, res) {
             });
         }
     );
-    
-    
+
+   
 });
 
 
 
 
-var server = app.listen(3000, '0.0.0.0', function() {
+var server = app.listen(3000, function() {
     console.log('Listening on port %d', server.address().port);
+//    User.findOne({'username': 'qwe'}, function(err, user) {
+//        console.log('trying to find user...');
+//        if(err) console.log(err.message);
+//        else {
+//            if(user) console.log('user is found.');
+//            console.log('user data: ', user.data);
+//            user.data = [0.15, 0.09, 1.7, 3.0, 6, 4, 1.5, 0.37, 0.67, 0.27, 0.77, 0.67, 0.17, 1, 0.37, 0.77, 0.67, 0.47, 0.97, 0.87, 0.37, 0.97, 1, 1.2, 1.84, 3.79, 7, 5.34, 1.97, 1.77, 1.97, 0.37, 0.57, 0.27, 0.17, 0.67, 0.97, 0.77, 0.85, 0.65, 0.63, 0.53, 0.3, 0.2, 0.2, 0.6, 0.4, 0.3]
+//            user.save(function(err) {
+//                if(err) console.log(err.message);
+//                console.log('array is successfuly saved into db.');
+//            });
+//        }
+//    });
 });
