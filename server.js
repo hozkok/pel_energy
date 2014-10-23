@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyparser = require('body-parser');
 var data_handler = require('./csv_handler');
+var price_parser = require('./price_parser');
 var app = express();
 
 // db connection and configurations
@@ -13,6 +14,12 @@ mongoose.connect(db.url);
 app.use(bodyparser.json()); // to support url encoded bodies
 app.use(bodyparser.urlencoded({extended: false})); // to support json encoded bodies
 app.use('/', express.static(__dirname + '/static'));
+
+// session configurations
+app.use(require('cookie-parser')());
+app.use(require('express-session')({secret: 's3CrE701d',
+                                    resave: true,
+                                    saveUninitialized: true}));
 
 // template settings
 app.set('views', './views');
@@ -56,22 +63,64 @@ app.post('/login', function(req, res) {
         //             d_total: demand_data.total
         //         });
         //     }
-        console.log('user data: ', user.data);
-        var price_data = {name: 'csv/price.csv'};
-        data_handler.parallel_read([price_data], function() {
-            res.render('user_charts', {
-                price: price_data.data,
-                p_total: price_data.total,
-                demand: user.data,
-                d_total: user.data.reduce(
-                    function(sum, num) {
-                        return sum + num;
-                    }
-                )
-            });
-        });
+        
+        // setting username for the session
+        req.session.name = user.username;
+        console.log('new session is started for ', user.username);
+
+        res.redirect('/chart');
+
+        // console.log('user data: ', user.data);
+        // var price_data = {name: 'csv/price.csv'};
+        // data_handler.parallel_read([price_data], function() {
+        //     res.render('user_charts', {
+        //         price: price_data.data,
+        //         p_total: price_data.total,
+        //         demand: user.data,
+        //         d_total: user.data.reduce(
+        //             function(sum, num) {
+        //                 return sum + num;
+        //             }
+        //         )
+        //     });
+        // });
     });
 
+});
+
+app.get('/chart', function(req, res) {
+    if(!req.session.name)
+        console.log('You must log in first.');
+
+    User.findOne({'username': req.session.name}, function(err, user) {
+        if(err) return console.log('chart: user find error');
+
+        var demandData = user.data;
+        price_parser.getPriceData(function(prices) {
+            var priceData = prices.map(function(elem) {
+                return elem / 1000 + 0.1;
+            });
+            var toSum = function(sum, num) {return sum + num;};
+            var chartData = {
+                price:      priceData,
+                p_total:    priceData.reduce(toSum),
+                demand:     demandData,
+                d_total:    demandData.reduce(toSum)
+            };
+            res.render('user_charts', chartData);
+        });
+    });
+    // var toSum = function(sum, num) {return sum + num;},
+    //     priceData = req.body.price,
+    //     demandData = req.body.demand;
+    // var chartData = {
+    //     price: priceData,
+    //     p_total: priceData.reduce(toSum),
+    //     demand: demandData,
+    //     d_total: demandData.reduce(toSum)
+    // };
+
+    // res.render('user_charts', chartData);
 });
 
     // signup...

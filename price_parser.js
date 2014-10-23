@@ -3,14 +3,8 @@ var cheerio = require('cheerio');
 
 var link = 'http://semorep.sem-o.com/SEMOWebSite/Default.aspx?qpReportServer=http://websemoreport/ReportServer_GOTHAMCITY/&qpReportURL=/SEMO%20Market%20Dashboard%20Reports/SMP%20and%20Load%20Table&prm_GetRunType=EA&prm_GetCurrency=EUR&rpt_Export=1';
 
+var daily_link = 'http://semorep.sem-o.com/SEMOWebSite/Default.aspx?qpReportServer=http://websemoreport/ReportServer_GOTHAMCITY/&qpReportURL=/SEMO%20Market%20Dashboard%20Reports/SMP%20and%20Load%20Table&prm_GetRunType=WD1&prm_GetCurrency=EUR&rpt_Export=1';
 
-exports.getPriceData = function() {
-    request(link, function(err, res, html) {
-        if(err) return console.log('error!!1');
-        
-        return c(html);
-    });
-};
 var c = function(htmlStr) {
     var $ = cheerio.load(htmlStr);
     tables = $('table');
@@ -19,8 +13,17 @@ var c = function(htmlStr) {
         // console.log(tables[25].children[i].children[5].children[0].children[0].data);
         prices.push(tables[25].children[i].children[5].children[0].children[0].data);
     }
-    console.log('Price data: ', prices);
     return prices;
+};
+
+
+exports.getPriceData = function(callback) {
+    request(link, function(err, res, html) {
+        if(err) return console.log('error!!1');
+        
+        // return c(html);
+        callback(c(html));
+    });
 };
 
 
