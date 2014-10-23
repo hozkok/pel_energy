@@ -1,5 +1,7 @@
 var request = require('request');
 var cheerio = require('cheerio');
+var Price = require('./models/price');
+var cronJob = require('cron').CronJob;
 
 var link = 'http://semorep.sem-o.com/SEMOWebSite/Default.aspx?qpReportServer=http://websemoreport/ReportServer_GOTHAMCITY/&qpReportURL=/SEMO%20Market%20Dashboard%20Reports/SMP%20and%20Load%20Table&prm_GetRunType=EA&prm_GetCurrency=EUR&rpt_Export=1';
 
@@ -26,6 +28,35 @@ exports.getPriceData = function(callback) {
     });
 };
 
+var getDailyPrice = function(callback) {
+    request(daily_link, function(err, res, html) {
+        if(err) return console.log('daily price error!');
+        if(callback) callback(c(html));
+    });
+};
+
+exports.saveDaily = function() {
+    var saver = function() {
+        getDailyPrice(function(data) {
+            var priceArr = data;
+            var price = new Price();
+            price.data = priceArr;
+            price.date = new Date();
+            price.save(function(err) { 
+                if(err) console.log(err.message);
+                else console.log(new Date(), 
+                    ' - price is successfully saved into db.');
+            });
+        }); 
+    };
+    var priceSaver = new cronJob({
+        cronTime: '00 00 08 * * *',
+        onTick: saver,
+        timeZone: 'GMT',
+        start: true
+    });
+    // priceSaver.start();
+};
 
 // http = require('http');
 // http.get('http://semorep.sem-o.com/SEMOWebSite/Default.aspx?qpReportServer=http://websemoreport/ReportServer_GOTHAMCITY/&qpReportURL=/SEMO%20Market%20Dashboard%20Reports/SMP%20and%20Load%20Table&prm_GetRunType=EA&prm_GetCurrency=EUR&rpt_Export=1', function(res) {

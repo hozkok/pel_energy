@@ -7,7 +7,7 @@ var app = express();
 // db connection and configurations
 var db = require('./db/db');
 var mongoose = require('mongoose');
-var User = require('./models/user');
+var User = require('./models/customer');
 mongoose.connect(db.url);
 
 
@@ -163,6 +163,7 @@ app.get('/', function(req, res) {
 
 var server = app.listen(3000, function() {
     console.log('Listening on port %d', server.address().port);
+    price_parser.saveDaily();
 //    User.findOne({'username': 'qwe'}, function(err, user) {
 //        console.log('trying to find user...');
 //        if(err) console.log(err.message);
