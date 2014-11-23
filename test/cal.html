@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Customer Calendar</title>
+        <link rel="stylesheet" href="jquery-ui-1.11.2.custom/jquery-ui.css">
+        <script type="text/javascript" src="jquery-latest.js"></script>
+        <script type="text/javascript" src="jquery-ui-1.11.2.custom/jquery-ui.min.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                var dateSettings = {
+                    showOn: 'button',
+                    buttonImage: 'calendar.gif',
+                    buttonImageOnly: true,
+                    buttonText: 'Select Date',
+                    dateFormat: 'd, MM, yy'
+                };
+                $('#from').datepicker(dateSettings);
+                $('#to').datepicker(dateSettings);
+            });
+        </script>
+    </head>
+    <body>
+        <form>
+            <table>
+                <tr>
+                    <td>Date From:</td>
+                    <td>
+                        <input type="text" name="from" id="from" value="Select Date" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Date To:</td>
+                    <td>
+                        <input type="text" name="to" id="to" value="Select Date" readonly>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>

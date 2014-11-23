@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Customer Chart</title>
+        <link rel="stylesheet" href="jquery-ui-1.11.2.custom/jquery-ui.css">
+        <script type="text/javascript" src="jquery-latest.js"></script>
+        <script type="text/javascript" src="jquery-ui.min.js"></script>
+        <script type="text/javascript" src="raphael.js"></script>
+        <script type="text/javascript" src="elycharts.min.js"></script>
+    </head>
+    <body>
+        <div id="tabs">
+          <ul>
+            <li><a href="#tabs-1">Tab 1</a></li>
+            <li><a href="#tabs-2">Tab Chart</a></li>
+            <li><a href="#tabs-3">Tab Extra</a></li>
+          </ul>
+          <div id="tabs-1">
+            <p>Elychart 1</p>
+              <div class="example-demo" style="height: 140px;width: 400px;margin: 0 0 0 20px;"></div>
+          </div>
+          <div id="tabs-2">
+            <p>Elychart 2 - Labels are not shown</p>
+              <div class="example-demo" style="height: 140px;width: 400px;margin: 0 0 0 20px;"></div>
+          </div>
+          <div id="tabs-3">
+            <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+            <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+          </div>
+        </div>
+
+            <script>
+        function random_data(max, len) {
+          var ret = [];
+          for (var i = 0; i < len; i++)
+            ret.push(Math.round(Math.random() * max));
+          return ret;
+        } 
+
+        $(function() {
+          
+          $.elycharts.templates['demo'] = {
+              type : 'line',
+              margins:[
+                6 /*top*/,
+                40  /*right*/,
+                15 /*bottom*/,
+                10 /*left*/
+              ],
+              labels : ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+              tooltips : function(env, serie, index, value, label) {
+                return 'Serie: <b>' + serie + ':' + label + '</b><br />Value: <b>' + value + '</b>';
+              },
+              barMargins: 10,
+              defaultSeries : {
+                /*rounded : false,*/
+                plotProps : {  "opacity" : .5, "stroke-width" : 1 },
+                dot : true,
+                dotProps : { "stroke-opacity" : 0, "stroke-width" : 2 },
+                tooltip : {
+                    frameProps : { opacity : .75 }
+                },
+                highlight : {
+                    overlayProps : {"fill" : "white", "fill-opacity" : .3, "stroke-width" : 0, "stroke-opacity" : 0}
+                },
+                axis: "r",
+                startAnimation : {
+                  active: true,
+                  type: 'grow',
+                  speed: 1000
+                }
+              },
+              series : {
+                serie1 : { type : 'bar', color : 'blue' },
+                serie2 : { type : 'bar', color : 'yellow' },
+                serie3 : { color : 'red',  plotProps : {  "opacity" : .5, "stroke-width" : 3 }, highlight : { scale : 2 }, axis : "r" }
+              },
+              defaultAxis : {
+                labels : true,
+                labelsProps: { fill : 'black' },
+                labelsPos: "middle"
+              },
+              axis: { 
+                l: {
+                    labels: true,                   
+                    labelsDistance: 5,
+                    normalize: true,
+                    title: "Legend",
+                    titleDistance: 15,
+                    titleProps: {
+                        fill: "black",
+                        "font-weight": "normal",
+                        "font-size": "11px",
+                        "font-family": 'sans-serif'
+                    }
+                },
+                r: {
+                    labels: true,
+                    labelsDistance: 5,
+                    normalize: true,
+                    title: "Legend",
+                    titleDistance: 30,
+                    titleProps: {
+                        fill: "black",
+                        "font-weight": "normal",
+                        "font-size": "11px",
+                        "font-family": 'sans-serif'
+                    }
+                }
+            },
+              features : {
+                grid : {
+                  draw : [false, true],
+                  forceBorder : true,
+                  props : { stroke : 'gray', "stroke-opacity" : .5 }
+                }
+              }
+            };
+            
+            
+            $( "#tabs" ).tabs();    
+            
+            $('.example-demo').each(function() {
+                $(this).chart({
+                    template : "demo",
+                    defaultSeries : {
+                       stepAnimation : {
+                          speed : 1000,
+                          easing : "elastic"
+                       }
+                   },
+                   series : {
+                       serie2 : { stacked : true }
+                   },
+                   values : {
+                       serie1 : random_data(5, 8),
+                       serie2 : random_data(5, 8),
+                       serie3 : random_data(5, 8)
+                   }
+                });
+            });
+          
+        });
+        </script>
+
+        
+    
+
+
+    </body>
+</html>

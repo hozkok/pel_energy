@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Customer Chart</title>
+        <link rel="stylesheet" href="jquery-ui-1.11.2.custom/jquery-ui.css">
+        <script type="text/javascript" src="jquery-latest.js"></script>
+        <script type="text/javascript" src="jquery.jqplot.min.js"></script>
+        <script type="text/javascript" src="jqplot/dist/plugins/jqplot.barRenderer.min.js"></script>
+        <script type="text/javascript" src="jqplot/dist/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+        <script type="text/javascript" src="jqplot/dist/plugins/jqplot.pointLabels.min.js"></script>
+        <script type="text/javascript" src="jqplot/dist/plugins/jqplot.highlighter.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="jquery.jqplot.min.css" />
+    </head>
+    <body>
+        
+        <div id="chart3" style="width:400px; height:300px;"></div>
+        <script class="code" type="text/javascript">
+        $(document).ready(function(){
+          var xAxisLabels = ['00:00', '00:30', '01:00', '01:30', '02:00', '02:30', '03:00', '03:30', '04:00', '04:30', '05:00', '05:30',
+                             '06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+                             '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
+                             '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30'];
+          var s1 = [5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 13, 15, 2, 7, 9, 11, 3, 5, 4, 6, 4, 3];
+          var s2 = [8, 10, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 13, 15, 2, 7, 9, 11, 3, 5, 4, 6, 4, 3];
+          var s3 = [5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 13, 15, 2, 7, 9, 11, 3, 5, 4, 1, 2, 6];
+          plot3 = $.jqplot('chart3', [s1, s2, s3], {
+            // Tell the plot to stack the bars.
+            stackSeries: true,
+            captureRightClick: true,
+            series: [
+                {renderer: $.jqplot.barRenderer},
+                {renderer: $.jqplot.barRenderer},
+                {renderer: $.jqplot.LineRenderer, yaxis: 'y2axis', disableStack: true}
+            ],
+            seriesDefaults:{
+              renderer:$.jqplot.BarRenderer,
+              rendererOptions: {
+                  // Put a 30 pixel margin between bars.
+                  barMargin: 10,
+                  // Highlight bars when mouse button pressed.
+                  // Disables default highlighting on mouse over.
+                  highlightMouseDown: true 
+              }
+            },
+            highlighter: {
+              show: true,
+              sizeAdjust: 7.5
+            },
+            axes: {
+              xaxis: {
+                  renderer: $.jqplot.CategoryAxisRenderer
+              },
+              yaxis: {
+                // Don't pad out the bottom of the data range.  By default,
+                // axes scaled as if data extended 10% above and below the
+                // actual range to prevent data points right on grid boundaries.
+                // Don't want to do that here.
+                padMin: 0,
+                autoscale: true,
+                numberTicks: 5
+              },
+              y2axis: {
+                autoscale: true,
+                numberTicks: 5
+              }
+            },
+            legend: {
+              show: true,
+              location: 'e',
+              placement: 'outside'
+            }      
+          });
+          // Bind a listener to the "jqplotDataClick" event.  Here, simply change
+          // the text of the info3 element to show what series and ponit were
+          // clicked along with the data for that point.
+          $('#chart3').bind('jqplotDataClick', 
+            function (ev, seriesIndex, pointIndex, data) {
+              $('#info3').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+            }
+          ); 
+        });
+        </script>
+        
+    
+
+
+    </body>
+</html>
